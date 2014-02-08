@@ -33,10 +33,10 @@ public class SolrServer {
 	public void add(){
 		Collection<SolrInputDocument> ls = new ArrayList<SolrInputDocument>();
 		
-		for(int i=0;i<3000;i++){
+		for(int i=0;i<10;i++){
 			SolrInputDocument doc = new SolrInputDocument ();
-			doc.addField("id", i);
-			doc.addField("name", "中国" + i);
+			doc.addField("id", 4000+i);
+			doc.addField("name", "联想笔记本电脑---" + i);
 			doc.addField("price", 50.5 + i);
 			doc.addField("age", 30 + i);
 			
@@ -44,7 +44,7 @@ public class SolrServer {
 		}
 		try {
 			server.add(ls);
-			server.commit();
+//			server.commit();
 		} catch (SolrServerException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -69,10 +69,22 @@ public class SolrServer {
 		}
 	}
 	
+	public void deleteByQuery(){
+		try {
+			server.deleteByQuery("*:*");
+			server.commit();
+		} catch (SolrServerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		SolrServer solrServer = new SolrServer();
-//		solrServer.add();
-		solrServer.deleteById();
+		solrServer.add();
+//		solrServer.deleteById();
+//		solrServer.deleteByQuery();
 	}
 
 }
