@@ -1,0 +1,53 @@
+solr测试环境
+
+服务器地址： 192.168.198.180
+
+环境部署路径：/home/solr
+
+中文分词：IK Analyzer
+
+zookeeper配置：
+
+	server.1=127.0.0.1:32889:33889
+	server.2=127.0.0.1:32888:33888
+	server.3=127.0.0.1:32887:33887
+	
+	zoo1 端口32181 
+	zoo2 端口32182 
+	zoo3 端口32183 
+
+	zookeeper启动：
+	
+	sh zkServer.sh start zoo1.cfg
+	sh zkServer.sh start zoo2.cfg
+	sh zkServer.sh start zoo3.cfg
+	
+	验证:
+	sh zkCli.sh -server localhost:32182 
+	ls /
+	create /zkdemo demo 看其他zookeeper服务是否创建了/zkdemo
+	delete /zkdemo
+	
+tomcat端口
+	tomcat1 --- 38001
+	tomcat2 --- 38002
+	tomcat3 --- 38003
+
+创建collection
+http://192.168.198.180:38003/solr/admin/collections?action=CREATE&name=demo&numShards=3&replicationFactor=1
+
+删除collection
+http://192.168.198.180:38003/solr/admin/collections?action=DELETE&name=demo 
+
+创建core
+http://192.168.198.180:38003/solr/admin/cores?action=CREATE&name=demo_shard3_replica3&collection=demo&shard=shard3
+	
+向zookeeper上传配置文件
+sh zkcli.sh -zkhost localhost:32182 -cmd upconfig -confdir /home/solr/resource/conf -confname democonf
+sh zkcli.sh -zkhost localhost:32182 -cmd linkconfig -collection demo -confname democonf
+
+Reload collection
+http://192.168.198.180:38001//solr/admin/collections?action=RELOAD&name=paimai
+
+
+
